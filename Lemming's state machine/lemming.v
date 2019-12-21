@@ -17,7 +17,7 @@ module top_module(
      
     reg [3:0]state;
     reg [3:0]next_state;
-    reg [3:0]remember_state;
+
     integer fly;
     initial 
     begin
@@ -29,15 +29,13 @@ module top_module(
     fly<=0;
     end
    
-    always@(posedge clk)    
-    if(areset) state<=A;
-    
-    else if(dig&!aaah) state<=D;
-    else if(!ground) begin state<=C;fly=fly+1;end
-    else if(fly>20)state<=E;
-    else if((fly<=20)&&ground)state<=A;
-    else
-    next_state<=state;
+    always@(posedge clk)begin    
+        if(areset) state<=A;
+        else if(dig&!aaah) state<=D;
+        else if(!ground) begin state<=C;fly=fly+1;end
+        else if(fly>20)state<=E;
+        else if((fly<=20)&&ground)state<=A;
+        else next_state<=state;
     
     always @(fly or state or bump_left or bump_right or ground or dig)begin
     
@@ -54,7 +52,6 @@ module top_module(
     B:begin 
           if(bump_right)next_state=A;
           else next_state=B;
-          
       end
     A:begin
           if(bump_left)next_state=B;
@@ -71,14 +68,12 @@ module top_module(
           walk_left<=1'b1;
           walk_right<=1'b0;
           aaah<=1'b0;
-         
           digging<=1'b0;
       end
     B:begin
           walk_left=1'b0;
           walk_right=1'b1;
           aaah=1'b0;
-          
           digging<=1'b0;
       end
     C:begin
